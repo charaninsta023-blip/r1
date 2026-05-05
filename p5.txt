@@ -1,0 +1,92 @@
+app.js
+import React from 'react';
+import './App.css';
+import FigureList from './FigureList';
+
+function App() {
+  return (
+    <div className="App">
+      <h1>Figure Gallery</h1>
+      <FigureList />
+    </div>
+  );
+}
+
+export default App;
+
+figurelist.js
+
+import React, { useState } from 'react';
+
+function BasicFigure({ image, caption, onRemove }) {
+  return (
+    <div className="basic-figure">
+      <img src={image} alt={caption} className="figure-image" />
+      <figcaption className="figure-caption">{caption}</figcaption>
+      <button className="remove-button" onClick={onRemove}>
+        Remove
+      </button>
+    </div>
+  );
+}
+
+function FigureList() {
+  const [figures, setFigures] = useState([
+    {
+      id: 1,
+      image: "https://www.w3schools.com/w3images/lights.jpg",
+      caption: "Beautiful Lights"
+    },
+    {
+      id: 2,
+      image: "https://www.w3schools.com/w3images/nature.jpg",
+      caption: "Nature"
+    }
+  ]);
+
+  const [newImage, setNewImage] = useState("");
+
+  function addFigure() {
+    if (newImage) {
+      setFigures([
+        ...figures,
+        {
+          id: Date.now(),
+          image: newImage,
+          caption: "New Image"
+        }
+      ]);
+      setNewImage("");
+    }
+  }
+
+  const removeFigure = (id) => {
+    setFigures(figures.filter(figure => figure.id !== id));
+  };
+
+  return (
+    <div className="figure-list">
+      <input
+        type="text"
+        placeholder="Image URL"
+        value={newImage}
+        onChange={(e) => setNewImage(e.target.value)}
+      />
+
+      <button onClick={addFigure}>Add Image</button>
+
+      <div className="grid">
+        {figures.map(figure => (
+          <BasicFigure
+            key={figure.id}
+            image={figure.image}
+            caption={figure.caption}
+            onRemove={() => removeFigure(figure.id)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default FigureList;
